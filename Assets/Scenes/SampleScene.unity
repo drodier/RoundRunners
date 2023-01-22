@@ -728,6 +728,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1078401137}
   self: {fileID: 519420032}
+  speed: 4
+  aheadStrength: 1
+  maxX: 3
+  maxY: 1.2
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,8 +1220,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1078401136}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.96, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -4.201, z: 0}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 997754510}
@@ -1234,7 +1238,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1078401136}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3ec811874e0417f4aad865a272260d0a, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1284,7 +1288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d29bf934043ce49a3347924d0428f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_JumpForce: 725
+  m_JumpForce: 780
   m_CrouchSpeed: 1
   m_MovementSmoothing: 0.05
   m_AirControl: 1
@@ -1361,12 +1365,12 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 1078401136}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3ec811874e0417f4aad865a272260d0a, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.48}
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.9, y: 1}
   m_Direction: 0
 --- !u!114 &1078401144
 MonoBehaviour:
@@ -1381,15 +1385,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1078401141}
-  runSpeed: 40
-  horizontalMove: 0
-  horizontalAxis: 0
-  lastMove: 0
-  jump: 0
-  crouch: 0
-  dashing: 0
-  stamina: 10
-  dashTimer: 10
+  baseRunSpeed: 40
+  dashStrength: 80
+  staminaRegen: 0.1
+  maxStamina: 5
+  stamina: 5
+  dashCost: 0.1
+  dashDeceleration: 1
 --- !u!1 &1385657309
 GameObject:
   m_ObjectHideFlags: 0

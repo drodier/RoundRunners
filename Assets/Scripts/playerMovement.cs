@@ -5,27 +5,26 @@ using UnityEngine;
 public class playerMovement : MonoBehaviour
 {
     public characterController controller;
+    public float baseRunSpeed = 40f;
+    public float dashStrength = 80f;
+    public float staminaRegen = 0.1f;
+    public float maxStamina = 5f;
+    public float stamina = 5f;
+    public float dashCost = 0.1f;
+    public float dashDeceleration = 1f;
 
-    public float runSpeed = 40f;
+    private float runSpeed = 40f;
+    private  float horizontalMove = 0f;
+    private float horizontalAxis = 0f;
+    private  float lastMove = 0f;
+    private bool jump = false; 
+    private bool crouch = false;
+    private bool dashing = false;
+    private  float dashTimer = 10f;
 
-    public  float horizontalMove = 0f;
-
-    public float horizontalAxis = 0f;
-
-    public  float lastMove = 0f;
-
-    public bool jump = false;
-    
-    public bool crouch = false;
-
-    public bool dashing = false;
-
-    public double stamina = 10f;
-    
-    public  double dashTimer = 10f;
     void Start()
     {
-        
+        stamina = maxStamina;
     }
 
     void Update()    
@@ -34,9 +33,9 @@ public class playerMovement : MonoBehaviour
         horizontalAxis = horizontalMove / runSpeed;
 
         jump = Input.GetButtonDown("Jump") ? true : jump;
-        if(Input.GetButtonDown("Crouch") && stamina == 10f){
+        if(Input.GetButtonDown("Crouch") && stamina == maxStamina){
             crouch = true;
-        } else if(Input.GetButtonUp("Crouch") || (stamina < 10f && dashTimer == 10f)){
+        } else if(Input.GetButtonUp("Crouch") || (stamina < maxStamina && dashTimer == 10f)){
             crouch = false;
         }
 
@@ -82,24 +81,24 @@ public class playerMovement : MonoBehaviour
         if(dashing){
             lastMove = horizontalAxis;
             if(dashTimer == 10f){
-                runSpeed = 80f;
+                runSpeed = dashStrength;
             }
-            runSpeed -= 1;
+            runSpeed -= dashDeceleration;
+            stamina -= dashCost;
             dashTimer -= 0.1f;
-            stamina -= 0.1f;
         }
     }
 
     void resetDash(){
-        runSpeed = 40f;
+        runSpeed = baseRunSpeed;
         dashTimer = 10f;
         dashing = false;
     }
 
     void recover(){
-        if(!crouch && stamina < 10){
-            stamina += 0.1f;
-            stamina = stamina > 10 ? 10 : stamina;
+        if(!crouch && stamina < maxStamina){
+            stamina += staminaRegen;
+            stamina = stamina > maxStamina ? maxStamina : stamina;
         }
     }
 }
