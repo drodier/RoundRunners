@@ -1270,7 +1270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_JumpForce: 725
-  m_CrouchSpeed: 0.36
+  m_CrouchSpeed: 1
   m_MovementSmoothing: 0.05
   m_AirControl: 1
   m_WhatIsGround:
@@ -1367,6 +1367,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 1078401141}
   runSpeed: 40
+  horizontalMove: 0
+  horizontalAxis: 0
+  lastMove: 0
+  jump: 0
+  crouch: 0
+  dashing: 0
+  stamina: 10
+  dashTimer: 10
 --- !u!1 &1385657309
 GameObject:
   m_ObjectHideFlags: 0
