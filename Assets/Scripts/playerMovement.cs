@@ -13,7 +13,7 @@ public class playerMovement : MonoBehaviour
 
     private float runSpeed = 40f;
     private  float horizontalMove = 0f;
-    private float orientation = 1f;
+    public float orientation = 1f;
     private bool jump = false; 
     private bool crouch = false;
 
@@ -37,57 +37,46 @@ public class playerMovement : MonoBehaviour
 
     void Update()    
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-        orientation = horizontalMove / runSpeed == -1 ? -1 : 1;
+        orientation = Input.GetAxisRaw("Horizontal");
+        horizontalMove = orientation * runSpeed;
         jump = Input.GetButtonDown("Jump") ? true : jump;
 
         crouch = checkCrouch();
         dashable = checkDash();
-
-        doCrouch();
-        doDash();
     }
 
     void FixedUpdate(){
         controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
         jump = false;
-        crouchDash();
+        doCrouch();
+        doDash();
         recover();
     }
 
     bool checkCrouch(){
-        if(Input.GetButtonDown("Crouch") && stamina - crouchDashCost >= 0){
+        if(Input.GetButtonDown("Crouch") && stamina - crouchDashCost >= 0 && (crouchLastMove == orientation || crouchLastMove == 0)){
             return true;
-        } else if(Input.GetButtonUp("Crouch") || stamina <= 0 || crouchLastMove == orientation){
+        } else if(Input.GetButtonUp("Crouch") || stamina <= 0){
+            resetCrouchDash();
             return false;
         }
+        crouchDashing = crouch;
         return crouch;
     }
 
     void doCrouch(){
-        if(crouch)
+        if(crouchDashing)
         {
-            initiateCrouchDash();
-        }
-        else
-        {
-            resetCrouchDash();
-        }
-    }
-
-    void initiateCrouchDash(){
-        if(!crouchDashing){
-            crouchDashing = true;
-            runSpeed = crouchDashStrength;
-            crouchDash();
-        }
-        else{
+            if(runSpeed == baseRunSpeed
+            ){
+                runSpeed = crouchDashStrength;
+                crouchLastMove = Input.GetAxis("Horizontal");
+            }
             crouchDash();
         }
     }
 
     void crouchDash(){
-        crouchLastMove = Input.GetAxis("Horizontal");
         runSpeed -= crouchDashDeceleration;
         stamina -= crouchDashCost;
     }
@@ -95,6 +84,7 @@ public class playerMovement : MonoBehaviour
     void resetCrouchDash(){
         runSpeed = baseRunSpeed;
         crouchDashing = false;
+        crouchLastMove = 0;
     }
 
     bool checkDash(){

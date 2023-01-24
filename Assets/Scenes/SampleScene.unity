@@ -1390,7 +1390,8 @@ MonoBehaviour:
   staminaRegen: 0.1
   maxStamina: 5
   stamina: 5
-  crouchDashCost: 0.1
+  orientation: 1
+  crouchDashCost: 0.01
   crouchDashStrength: 80
   crouchDashDeceleration: 1
   dashCost: 3
