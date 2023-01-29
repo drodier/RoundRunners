@@ -5,22 +5,30 @@ using UnityEngine;
 public class playerMovement : MonoBehaviour
 {
     public characterController controller;
+    public Transform playerTransform;
     public float baseRunSpeed = 40f;
-    public float dashStrength = 80f;
     public float staminaRegen = 0.1f;
     public float maxStamina = 5f;
     public float stamina = 5f;
-    public float dashCost = 0.1f;
-    public float dashDeceleration = 1f;
 
     private float runSpeed = 40f;
     private  float horizontalMove = 0f;
-    private float horizontalAxis = 0f;
-    private  float lastMove = 0f;
+    public float orientation = 1f;
     private bool jump = false; 
     private bool crouch = false;
-    private bool dashing = false;
-    private  float dashTimer = 10f;
+
+    public float crouchDashCost = 0.1f;
+    public float crouchDashStrength = 80f;
+    public float crouchDashDeceleration = 1f;
+    private bool crouchDashing = false;
+    private  float crouchLastMove = 0f;
+
+
+    public float dashCost = 3f;
+    public float dashStrength = 2f;
+    private bool dashable = true;
+
+
 
     void Start()
     {
@@ -29,74 +37,87 @@ public class playerMovement : MonoBehaviour
 
     void Update()    
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-        horizontalAxis = horizontalMove / runSpeed;
-
+        orientation = Input.GetAxisRaw("Horizontal");
+        horizontalMove = orientation * runSpeed;
         jump = Input.GetButtonDown("Jump") ? true : jump;
-        if(Input.GetButtonDown("Crouch") && stamina == maxStamina){
-            crouch = true;
-        } else if(Input.GetButtonUp("Crouch") || (stamina < maxStamina && dashTimer == 10f)){
-            crouch = false;
-        }
 
-        if(crouch)
-        {
-            if(horizontalAxis != 0 && dashTimer == 10f)
-            {
-                initiateDash();
-            }
-            else
-            {
-                if((horizontalAxis == 0 || horizontalAxis == lastMove) && dashTimer < 10f)
-                {
-                    initiateDash();
-                }
-                else
-                {
-                    resetDash();
-                }
-            }
-        }
-        else if(dashTimer < 10f)
-        {
-            resetDash();
-        }
+        crouch = checkCrouch();
+        dashable = checkDash();
     }
 
     void FixedUpdate(){
         controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
         jump = false;
-        crouchDash();
+        doCrouch();
+        doDash();
         recover();
     }
 
-    void initiateDash(){
-        if(!dashing){
-            dashing = true;
+    bool checkCrouch(){
+        if(Input.GetButtonDown("Crouch") && stamina - crouchDashCost >= 0 && (crouchLastMove == orientation || crouchLastMove == 0)){
+            return true;
+        } else if(Input.GetButtonUp("Crouch") || stamina <= 0){
+            resetCrouchDash();
+            return false;
+        }
+        crouchDashing = crouch;
+        return crouch;
+    }
+
+    void doCrouch(){
+        if(crouchDashing)
+        {
+            if(runSpeed == baseRunSpeed
+            ){
+                runSpeed = crouchDashStrength;
+                crouchLastMove = Input.GetAxis("Horizontal");
+            }
             crouchDash();
         }
     }
 
     void crouchDash(){
-        if(dashing){
-            lastMove = horizontalAxis;
-            if(dashTimer == 10f){
-                runSpeed = dashStrength;
-            }
-            runSpeed -= dashDeceleration;
+        runSpeed -= crouchDashDeceleration;
+        stamina -= crouchDashCost;
+    }
+
+    void resetCrouchDash(){
+        runSpeed = baseRunSpeed;
+        crouchDashing = false;
+        crouchLastMove = 0;
+    }
+
+    bool checkDash(){
+        if(Input.GetButtonDown("Dash") && stamina - dashCost >= 0){
+            return true;
+        } else if(Input.GetButtonUp("Dash") || (stamina < maxStamina)){
+            return false;
+        }
+        return dashable;
+    }
+
+    void doDash(){
+        if(dashable)
+        {
+            dash();
+        }
+    }
+
+    void dash(){
+        if(dashable){
             stamina -= dashCost;
-            dashTimer -= 0.1f;
+            playerTransform.position = new Vector3(playerTransform.position.x + (dashStrength * orientation),
+                                                    playerTransform.position.y,
+                                                    playerTransform.position.z);
         }
     }
 
     void resetDash(){
-        runSpeed = baseRunSpeed;
-        dashTimer = 10f;
-        dashing = false;
+        dashable = false;
     }
 
     void recover(){
-        if(!crouch && stamina < maxStamina){
+        if(!crouch && !dashable && stamina < maxStamina){
             stamina += staminaRegen;
             stamina = stamina > maxStamina ? maxStamina : stamina;
         }

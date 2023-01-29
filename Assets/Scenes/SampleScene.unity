@@ -1385,13 +1385,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1078401141}
+  playerTransform: {fileID: 1078401137}
   baseRunSpeed: 40
-  dashStrength: 80
   staminaRegen: 0.1
   maxStamina: 5
   stamina: 5
-  dashCost: 0.1
-  dashDeceleration: 1
+  orientation: 1
+  crouchDashCost: 0.01
+  crouchDashStrength: 80
+  crouchDashDeceleration: 1
+  dashCost: 3
+  dashStrength: 2
 --- !u!1 &1385657309
 GameObject:
   m_ObjectHideFlags: 0
