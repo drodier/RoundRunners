@@ -6,6 +6,7 @@ public class staminaBarScript : MonoBehaviour
 {
     public playerMovement player;
     public Transform staminaBar;
+    public Transform staminaContainer;
     private float stamina;
 
     void Start(){
@@ -15,6 +16,8 @@ public class staminaBarScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        staminaBar.localScale = new Vector3(player.stamina / player.maxStamina * 1.5f, staminaBar.localScale.y, 1);
+        float offset = player.stamina / player.maxStamina;
+        staminaBar.localScale = new Vector3(1.1f * offset, .15f, 1);
+        staminaBar.position = new Vector3(staminaContainer.position.x-((1-offset)/2), staminaContainer.position.y, staminaContainer.position.z);
     }
 }

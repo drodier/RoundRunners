@@ -867,7 +867,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1102ec26987d494fb82bc038f11a619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 490173644676314849, guid: 600edf7104ed51f49974678dba94fa4c, type: 3}
+  playerPrefab: {fileID: 1601599581248029039, guid: d7e088b4624d4d84087ee567c14aa8cd, type: 3}
   cam: {fileID: 86594915}
   minX: -18
   maxX: 24

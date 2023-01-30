@@ -22,7 +22,6 @@ public class playerMovement : MonoBehaviour
     public float crouchDashStrength = 80f;
     public float crouchDashDeceleration = 1f;
     private bool crouchDashing = false;
-    private  float crouchLastMove = 0f;
 
 
     public float dashCost = 3f;
@@ -65,7 +64,7 @@ public class playerMovement : MonoBehaviour
     }
 
     bool checkCrouch(){
-        if(Input.GetButtonDown("Crouch") && stamina - crouchDashCost >= 0 && (crouchLastMove == orientation || crouchLastMove == 0)){
+        if(Input.GetButtonDown("Crouch") && stamina == maxStamina){
             return true;
         } else if(Input.GetButtonUp("Crouch") || stamina <= 0){
             resetCrouchDash();
@@ -76,26 +75,28 @@ public class playerMovement : MonoBehaviour
     }
 
     void doCrouch(){
-        if(crouchDashing)
+        if(crouchDashing && stamina - crouchDashCost >= 0)
         {
-            if(runSpeed == baseRunSpeed
-            ){
+            if(runSpeed == baseRunSpeed){
                 runSpeed = crouchDashStrength;
-                crouchLastMove = Input.GetAxis("Horizontal");
             }
             crouchDash();
+        }
+        else
+        {
+            resetCrouchDash();
         }
     }
 
     void crouchDash(){
-        runSpeed -= crouchDashDeceleration;
+        runSpeed = runSpeed - crouchDashDeceleration < 0 ? 0 : runSpeed - crouchDashDeceleration;
         stamina -= crouchDashCost;
     }
 
     void resetCrouchDash(){
         runSpeed = baseRunSpeed;
+        crouch = false;
         crouchDashing = false;
-        crouchLastMove = 0;
     }
 
     bool checkDash(){
