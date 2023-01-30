@@ -5,7 +5,7 @@ using UnityEngine;
 public class backgroundEffect : MonoBehaviour
 {
     private float length, startpos;
-    public GameObject cam;
+    public Camera cam;
     public float parallaxEffect;
 
     void Start(){
@@ -14,8 +14,8 @@ public class backgroundEffect : MonoBehaviour
     }
 
     void FixedUpdate(){
-        float temp = (cam.transform.position.x * (1-parallaxEffect));
-        float dist = (cam.transform.position.x * parallaxEffect);
+        float temp = (cam.GetComponent<Transform>().position.x * (1-parallaxEffect));
+        float dist = (cam.GetComponent<Transform>().position.x * parallaxEffect);
 
         transform.position = new Vector3(startpos + dist, transform.position.y, transform.position.z);
 

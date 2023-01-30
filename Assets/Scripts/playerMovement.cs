@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class playerMovement : MonoBehaviour
 {
@@ -28,29 +29,39 @@ public class playerMovement : MonoBehaviour
     public float dashStrength = 2f;
     private bool dashable = true;
 
+    private PhotonView view;
+
 
 
     void Start()
     {
         stamina = maxStamina;
+
+        view = GetComponent<PhotonView>();
     }
 
     void Update()    
     {
-        orientation = Input.GetAxisRaw("Horizontal");
-        horizontalMove = orientation * runSpeed;
-        jump = Input.GetButtonDown("Jump") ? true : jump;
+        if(view.IsMine)
+        {
+            orientation = Input.GetAxisRaw("Horizontal");
+            horizontalMove = orientation * runSpeed;
+            jump = Input.GetButtonDown("Jump") ? true : jump;
 
-        crouch = checkCrouch();
-        dashable = checkDash();
+            crouch = checkCrouch();
+            dashable = checkDash();
+        }
     }
 
     void FixedUpdate(){
-        controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
-        jump = false;
-        doCrouch();
-        doDash();
-        recover();
+        if(view.IsMine)
+        {
+            controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
+            jump = false;
+            doCrouch();
+            doDash();
+            recover();
+        }
     }
 
     bool checkCrouch(){

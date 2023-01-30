@@ -17,9 +17,14 @@ public class cameraController : MonoBehaviour
     private float direction = 0;
     private Vector2 desiredDirection;
 
+    public void setPlayer(Transform playerTransform){
+        player = playerTransform;
+        self.position = player.position;
+    }
+
     void Start()
     {
-        self.position = player.position;
+        GetComponent<Camera>().gameObject.SetActive(true);
     }
 
     void Update(){
